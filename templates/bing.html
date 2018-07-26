@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <title id="t">{{.title}}</title>
+</head>
+<body>
+<input type="button" value="下一张" style="padding:5px 10px 5px 10px" onclick="test()">
+<h2 id="ti">{{.title}}</h2>
+<img src="{{.url}}" id="im">
+<script>
+    var idx=0;
+    function test() {
+        idx=idx+1;
+        $.ajax({
+            type: "GET",
+            url: "/bing?idx="+idx,
+            //data: "_csrf="+t,
+            success: function(msg){
+                var data=$.parseJSON(msg);
+                $("#ti").text(data.Name);
+                $("#t").text(data.Name);
+                $("#im").attr("src",data.Url);
+            }
+        });
+    }
+    window.onbeforeunload=function(e){     
+　　var e = window.event||e;  
+　　e.returnValue=("确定离开当前页面吗？");
+}
+window.onunload=function(e){     
+    　　 $.ajax({
+            type: "GET",
+            url: "/exit?t="+new Date().getTime(),
+            success: function(msg){
+        
+            }
+        });
+}
+</script>
+</body>
+</html>
